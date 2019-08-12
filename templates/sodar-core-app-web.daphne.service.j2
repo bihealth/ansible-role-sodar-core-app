@@ -1,0 +1,24 @@
+[Unit]
+Description=Production version of {{ sodar_core_app_name }}-web
+Requires=nginx.service
+Wants=memcached.service
+Before=nginx.service
+
+[Service]
+RuntimeDirectory={{ sodar_core_app_name }}
+User={{ sodar_core_app_name }}
+Group=nobody
+WorkingDirectory=/srv/{{ sodar_core_app_name }}-web/{{ sodar_core_app_version }}
+EnvironmentFile=/etc/systemd/system/{{ sodar_core_app_name }}-env.sh
+KillMode=process
+Restart=always
+StandardOutput=file:/var/log/{{ sodar_core_app_name }}/kiosc-web.log
+StandardError=file:/var/log/{{ sodar_core_app_name }}/kiosc-web.log
+ExecStart=/srv/{{ sodar_core_app_name }}-web/{{ sodar_core_app_version }}-venv/bin/daphne \
+          --bind {{ sodar_core_app_host }} \
+          --port {{ sodar_core_app_port }} \
+          config.asgi:application
+
+[Install]
+# When should this service be triggered? (this is the equivalent of SysV's runlevel 3)
+WantedBy=multi-user.target

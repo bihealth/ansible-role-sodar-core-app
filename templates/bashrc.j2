@@ -1,0 +1,28 @@
+# -----------------------------------------------------------------------------------------------
+# Function {{ sodar_core_app_name }}-env
+#
+# Activate {{ sodar_core_app_name }}-web environment
+# -----------------------------------------------------------------------------------------------
+
+{{ sodar_core_app_name }}-env()
+{
+    source /etc/systemd/system/{{ sodar_core_app_name }}-env.sh
+    for name in $(grep '^.*=' /etc/systemd/system/{{ sodar_core_app_name }}-env.sh | sed -e 's/=.*//'); do
+        export $name
+    done
+    source /srv/{{ sodar_core_app_name }}-web/{{ sodar_core_app_version }}-venv/bin/activate
+}
+
+# -----------------------------------------------------------------------------------------------
+# Function {{ sodar_core_app_name }}-manage
+#
+# Run the manage.py script
+# -----------------------------------------------------------------------------------------------
+
+{{ sodar_core_app_name }}-manage()
+(
+    {{ sodar_core_app_name }}-env
+    source /srv/{{ sodar_core_app_name }}-web/{{ sodar_core_app_version }}-venv/bin/activate
+    cd /srv/{{ sodar_core_app_name }}-web/{{ sodar_core_app_version }}
+    python manage.py $*
+)

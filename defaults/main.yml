@@ -1,0 +1,92 @@
+---
+
+# REQUIRED Settings -------------------------------------------------------------------------------
+
+# Name of the app.
+# sodar_core_app_name: null
+
+# The Git repository to clone the app from.
+# sodar_core_app_git_repo: null
+
+# Superuser password (default superuser name is "root").
+# sodar_core_app_superuser_password: __password__
+
+# The secret key to use.
+# sodar_core_app_django_secret_key: null
+
+# The app version to install (any tree-ish of the Git repository)
+# sodar_core_app_version: __version__
+
+# Important Settings (you might want to override these) -------------------------------------------
+
+# The email address of the superuser.
+sodar_core_app_superuser_email: admin@example.com
+
+# Whether or not to enable email.
+sodar_core_app_email_enabled: false
+
+# Sender to use for sending emails.
+sodar_core_app_email_sender: sender@example.com
+
+# Email prefix to use for sending emails.
+sodar_core_app_email_prefix: "[SODAR Core Site]"
+
+# Outgoing email server to use.
+sodar_core_app_email_url: "smtp://smtp.example.com"
+
+# A list with up to two LDAP servers to use for authentication.
+sodar_core_app_ldap:  # up to two atm
+  - enabled: false
+    uri: "ldap://first.example.com:389"
+    bind_dn: "CN=ldap-user,OU=unit,DC=first,DC=example,DC=com"
+    bind_password: "__password__"
+    user_search_base: "OU=unit,DC=first,DC=example,DC=com"
+    domain: "EXAMPLE"
+    domain_printable: "Example Site"
+  - enabled: false
+    uri: "ldap://second.example.com:389"
+    bind_dn: "CN=ldap-user,OU=unit,DC=second,DC=example,DC=com"
+    bind_password: "__password__"
+    user_search_base: "OU=unit,DC=second,DC=example,DC=com"
+    domain: "EXAMPLE2"
+    domain_printable: "Example Site #2"
+
+# Other Settings (the defaults are sensible for most cases) ---------------------------------------
+
+# Superuser name.
+sodar_core_app_superuser: root
+
+# The host to listen to.
+sodar_core_app_host: 127.0.0.1
+
+# The port to listen to.
+sodar_core_app_port: 8000
+
+# Whether the SODARE Core projectroles app should send out emails (if emails are enabled).
+sodar_core_app_projectroles_send_email: true
+
+# Internal Settings (to be overridden by roles extending this) ------------------------------------
+
+# The web server to use.
+sodar_core_app_webserver: gunicorn
+
+# The Python version to use.
+sodar_core_app_python_version: 3.6
+
+# The list of plugins to enable by default.
+sodar_core_app_backend_plugins: []
+
+# Whether or not to build docs.
+sodar_core_app_build_docs: false
+
+# Whether the app is Docker-enabled or not.
+sodar_core_app_docker_enabled: false
+
+# Whether or not the app is Celery-enabled.
+sodar_core_app_celery_enabled: false
+
+# Definition of the Celery workers, if enabled.
+sodar_core_app_celeryd_workers:
+  - name: default
+    queues: default
+    concurrency: 8

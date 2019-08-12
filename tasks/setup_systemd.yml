@@ -1,0 +1,58 @@
+# Register site with systemd
+---
+
+- name: create directory for logs
+  file:
+    state: directory
+    dest: /var/log/{{ sodar_core_app_name }}
+    owner: "{{ sodar_core_app_name }}"
+    group: nobody
+
+- name: install systemd environment file
+  template:
+    src: "sodar-core-app-env.sh.j2"
+    dest: /etc/systemd/system/{{ sodar_core_app_name }}-env.sh
+  notify:
+    - restart sodar-core-app-web
+    - restart sodar-core-app-celeryd
+    - restart sodar-core-app-celerybeat
+  no_log: true  # contains passwords
+
+- name: install web systemd unit files
+  template:
+    src: "sodar-core-app-web.{{ sodar_core_app_webserver }}.service.j2"
+    dest: /etc/systemd/system/{{ sodar_core_app_name }}-web.service
+  notify: restart sodar-core-app-web
+
+- name: install celerybeat systemd unit files
+  template:
+    src: "sodar-core-app-celerybeat.service.j2"
+    dest: /etc/systemd/system/{{ sodar_core_app_name }}-celerybeat.service
+  notify: restart sodar-core-app-celerybeat
+
+- name: install celeryd systemd unit files (one for each queue)
+  template:
+    src: "sodar-core-app-celeryd.service.j2"
+    dest: /etc/systemd/system/{{ sodar_core_app_name }}-celeryd-{{ item.name }}.service
+  notify: restart sodar-core-app-celeryd
+  loop: "{{ sodar_core_app_celeryd_workers }}"
+
+- name: start and enable web and celerybeat systemd unit
+  systemd:
+    state: started
+    name: "{{ sodar_core_app_name }}-{{ item }}"
+    enabled: true
+    daemon_reload: true
+  notify: restart sodar-core-app-{{ item }}
+  loop:
+    - web
+    - celerybeat
+
+- name: start and enable celeryd systemd unit files (one for each queue)
+  systemd:
+    state: started
+    name: "{{ sodar_core_app_name }}-celeryd-{{ item.name }}"
+    enabled: true
+    daemon_reload: true
+  notify: restart sodar-core-app-celeryd
+  loop: "{{ sodar_core_app_celeryd_workers }}"

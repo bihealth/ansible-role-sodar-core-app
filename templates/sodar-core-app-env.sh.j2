@@ -1,0 +1,38 @@
+DATABASE_URL="postgresql://{{ postgres_client_user }}:{{ postgres_client_password }}@{{ postgres_client_host }}/{{ postgres_client_db }}"
+
+{% if sodar_core_app_email_enabled %}}
+EMAIL_SENDER="{{ sodar_core_app_email_sender }}"
+EMAIL_SUBJECT_PREFIX="{{ sodar_core_app_email_prefix }}"
+EMAIL_URL="{{ sodar_core_app_email_url }}"
+{% endif %}
+
+DJANGO_ALLOWED_HOSTS="*"
+DJANGO_SECRET_KEY="{{ sodar_core_app_django_secret_key }}"
+DJANGO_SETTINGS_MODULE="config.settings.production"
+
+{% if sodar_core_app_ldap.0.enabled %}
+ENABLE_LDAP=1
+AUTH_LDAP_SERVER_URI="{{ sodar_core_app_ldap.0.uri }}"
+AUTH_LDAP_BIND_PASSWORD="{{ sodar_core_app_ldap.0.bind_password }}"
+AUTH_LDAP_BIND_DN="{{ sodar_core_app_ldap.0.bind_dn }}"
+AUTH_LDAP_USER_SEARCH_BASE="{{ sodar_core_app_ldap.0.user_search_base }}"
+AUTH_LDAP_USERNAME_DOMAIN="{{ sodar_core_app_ldap.0.domain }}"
+AUTH_LDAP_DOMAIN_PRINTABLE="{{ sodar_core_app_ldap.0.domain_printable }}"
+{% endif %}
+
+{% if sodar_core_app_ldap.1.enabled %}
+ENABLE_LDAP_SECONDARY=1
+AUTH_LDAP2_SERVER_URI="{{ sodar_core_app_ldap.1.uri }}"
+AUTH_LDAP2_BIND_PASSWORD="{{ sodar_core_app_ldap.1.bind_password }}"
+AUTH_LDAP2_BIND_DN="{{ sodar_core_app_ldap.1.bind_dn }}"
+AUTH_LDAP2_USER_SEARCH_BASE="{{ sodar_core_app_ldap.1.user_search_base }}"
+AUTH_LDAP2_USERNAME_DOMAIN="{{ sodar_core_app_ldap.1.domain }}"
+AUTH_LDAP2_DOMAIN_PRINTABLE="{{ sodar_core_app_ldap.1.domain_printable }}"
+{% endif %}
+
+PROJECTROLES_SEND_EMAIL="{% if sodar_core_app_projectroles_send_email %}1{% else %}0{% endif %}"
+ENABLED_BACKEND_PLUGINS="{{ sodar_core_app_backend_plugins|join(",") }}"
+PROJECTROLES_ADMIN_OWNER="{{ sodar_core_app_superuser }}"
+
+CELERY_CHDIR="/srv/{{ sodar_core_app_name }}-web/{{ sodar_core_app_version }}"
+CELERY_CREATE_DIRS="1"

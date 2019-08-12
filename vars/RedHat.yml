@@ -1,0 +1,4 @@
+---
+
+sodar_core_app_lib_openldap_clients: openldap-clients
+sodar_core_app_lib_openldap_devel: openldap-devel

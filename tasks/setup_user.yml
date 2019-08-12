@@ -1,0 +1,34 @@
+# user creation and configuration
+---
+
+- name: create group for running app
+  group:
+    name: "{{ sodar_core_app_name }}"
+
+- name: create user for running app
+  user:
+    name: "{{ sodar_core_app_name }}"
+    home: /srv/{{ sodar_core_app_name }}-web
+    group: "{{ sodar_core_app_name }}"
+  tags: docker
+
+- name: add user to docker app
+  user:
+    name: "{{ sodar_core_app_name }}"
+    groups: docker
+    append: true
+  when: sodar_core_app_docker_enabled
+
+- name: create SODAR Core app bashrc file
+  template:
+    src: bashrc.j2
+    dest: /srv/{{ sodar_core_app_name }}-web/.bashrc.sodar_core_app
+    owner: "{{ sodar_core_app_name }}"
+    group: "{{ sodar_core_app_name }}"
+    mode: ug=rx,o=
+
+- name: source SODAR Core app bashrc file in .bashrc
+  blockinfile:
+    path: /srv/{{ sodar_core_app_name }}-web/.bashrc
+    block: |
+      source /srv/{{ sodar_core_app_name }}-web/.bashrc.sodar_core_app

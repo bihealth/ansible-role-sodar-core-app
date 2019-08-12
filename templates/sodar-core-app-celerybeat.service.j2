@@ -1,0 +1,28 @@
+[Unit]
+Description=Production version of {{ sodar_core_app_name }}-celerybeat
+Requires=nginx.service
+Wants=memcached.service
+Before=nginx.service {{ sodar_core_app_name }}-web.service
+
+[Service]
+RuntimeDirectory={{ sodar_core_app_name }}
+User={{ sodar_core_app_name }}
+Group=nobody
+WorkingDirectory=/srv/{{ sodar_core_app_name }}-web/{{ sodar_core_app_version }}
+EnvironmentFile=/etc/systemd/system/{{ sodar_core_app_name }}-env.sh
+PIDFile=/var/run/{{ sodar_core_app_name }}/{{ sodar_core_app_name }}-celerybeat.pid
+Type=forking
+KillMode=process
+Restart=always
+ExecStart=/srv/{{ sodar_core_app_name }}-web/{{ sodar_core_app_version }}-venv/bin/celery \
+          beat \
+          --max-interval 30 \
+          --app config.celery_app \
+          --loglevel info \
+          --pid=/var/run/{{ sodar_core_app_name }}/{{ sodar_core_app_name }}-celerybeat.pid \
+          --logfile=/var/log/{{ sodar_core_app_name }}/{{ sodar_core_app_name }}-celerybeat.log \
+          --detach
+
+[Install]
+# When should this service be triggered? (this is the equivalent of SysV's runlevel 3)
+WantedBy=multi-user.target

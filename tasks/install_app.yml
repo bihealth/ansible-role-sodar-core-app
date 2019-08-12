@@ -1,0 +1,161 @@
+---
+
+# SODAR Core app installation ---------------------------------------------------------------------
+
+- name: install virtualenv
+  command: pip{{ sodar_core_app_python_version }} install virtualenv
+  args:
+    creates: /usr/bin/virtualenv
+
+- name: install misc dependencies
+  package:
+    name:
+      - gcc
+      - "{{ sodar_core_app_lib_openldap_clients }}"
+      - "{{ sodar_core_app_lib_openldap_devel }}"
+    state: present
+
+- name: ensure clone target exists
+  file:
+    recurse: true
+    state: directory
+    dest: /srv/{{ sodar_core_app_name }}-web/{{ sodar_core_app_version }}
+    owner: "{{ sodar_core_app_name }}"
+    group: "{{ sodar_core_app_name }}"
+    mode: u=rwx,go=rx
+
+- name: clone sodar-core-app source code
+  git:
+    repo: "{{ sodar_core_app_git_repo }}"
+    dest: /srv/{{ sodar_core_app_name }}-web/{{ sodar_core_app_version }}
+    version: "{{ sodar_core_app_version }}"
+    accept_hostkey: true
+    force: true
+  notify:
+    - restart sodar-core-app-web
+    - restart sodar-core-app-celeryd
+    - restart sodar-core-app-celerybeat
+  register: clone_repo
+
+# Setup virtual environment -----------------------------------------------------------------------
+
+- name: ensure virtual env target exists
+  file:
+    recurse: true
+    state: directory
+    dest: "/srv/{{ sodar_core_app_name }}-web/{{ sodar_core_app_version }}-venv"
+    owner: "{{ sodar_core_app_name }}"
+    group: "{{ sodar_core_app_name }}"
+  notify:
+    - restart sodar-core-app-web
+    - restart sodar-core-app-celeryd
+    - restart sodar-core-app-celerybeat
+
+- name: create virtualenv environment
+  environment:
+    DATABASE_URL: "postgresql://{{ postgres_client_user }}:{{ postgres_client_password }}@{{ postgres_client_host }}/{{ postgres_client_db }}"
+    DJANGO_ALLOWED_HOSTS: "*"
+    DJANGO_SECRET_KEY: "{{ sodar_core_app_django_secret_key }}"
+    DJANGO_SETTINGS_MODULE: "config.settings.production"
+    LC_ALL: en_US.UTF-8
+  shell: |
+    set -xeo pipefail
+    trap "rm -rf /srv/{{ sodar_core_app_name }}-web/{{ sodar_core_app_version }}-venv" ERR
+    virtualenv -p /usr/bin/python{{ sodar_core_app_python_version }} /srv/{{ sodar_core_app_name }}-web/{{ sodar_core_app_version }}-venv
+  args:
+    executable: /bin/bash
+    creates: /srv/{{ sodar_core_app_name }}-web/{{ sodar_core_app_version }}-venv/bin/activate
+  register: venv_created
+  notify:
+    - restart sodar-core-app-web
+    - restart sodar-core-app-celeryd
+    - restart sodar-core-app-celerybeat
+
+- name: install site requirements in virtualenv
+  environment:
+    DATABASE_URL: "postgresql://{{ postgres_client_user }}:{{ postgres_client_password }}@{{ postgres_client_host }}/{{ postgres_client_db }}"
+    DJANGO_ALLOWED_HOSTS: "*"
+    DJANGO_SECRET_KEY: "{{ sodar_core_app_django_secret_key }}"
+    DJANGO_SETTINGS_MODULE: "config.settings.production"
+    LC_ALL: en_US.UTF-8
+  shell: |
+    set -xeo pipefail
+    export
+    source /srv/{{ sodar_core_app_name }}-web/{{ sodar_core_app_version }}-venv/bin/activate
+    pip install -r requirements/production.txt
+  args:
+    executable: /bin/bash
+    chdir: /srv/{{ sodar_core_app_name }}-web/{{ sodar_core_app_version }}
+  when: venv_created.changed or clone_repo.changed
+  notify:
+    - restart sodar-core-app-web
+    - restart sodar-core-app-celeryd
+    - restart sodar-core-app-celerybeat
+  tags: [skip_ansible_lint]  # TODO: move to handler?
+
+# Prepare site and superuser ----------------------------------------------------------------------
+
+- name: django -- prepare static files
+  environment:
+    DATABASE_URL: "postgresql://{{ postgres_client_user }}:{{ postgres_client_password }}@{{ postgres_client_host }}/{{ postgres_client_db }}"
+    DJANGO_ALLOWED_HOSTS: "*"
+    DJANGO_SECRET_KEY: "{{ sodar_core_app_django_secret_key }}"
+    DJANGO_SETTINGS_MODULE: "config.settings.production"
+    LC_ALL: en_US.UTF-8
+  shell: |
+    set -xeo pipefail
+    source /srv/{{ sodar_core_app_name }}-web/{{ sodar_core_app_version }}-venv/bin/activate
+    python manage.py collectstatic --no-input
+  args:
+    executable: /bin/bash
+    chdir: /srv/{{ sodar_core_app_name }}-web/{{ sodar_core_app_version }}
+  changed_when: false  # hack, must always prepare
+
+# We will always migrate...
+- name: django -- migrate database
+  environment:
+    DATABASE_URL: "postgresql://{{ postgres_client_user }}:{{ postgres_client_password }}@{{ postgres_client_host }}/{{ postgres_client_db }}"
+    DJANGO_ALLOWED_HOSTS: "*"
+    DJANGO_SECRET_KEY: "{{ sodar_core_app_django_secret_key }}"
+    DJANGO_SETTINGS_MODULE: "config.settings.production"
+    LC_ALL: en_US.UTF-8
+  shell: |
+    source /srv/{{ sodar_core_app_name }}-web/{{ sodar_core_app_version }}-venv/bin/activate
+    python manage.py migrate
+  args:
+    executable: /bin/bash
+    chdir: /srv/{{ sodar_core_app_name }}-web/{{ sodar_core_app_version }}
+  changed_when: false  # hack
+
+# .. but only create the super user unless previously created.
+- name: django - create superuser
+  environment:
+    DATABASE_URL: "postgresql://{{ postgres_client_user }}:{{ postgres_client_password }}@{{ postgres_client_host }}/{{ postgres_client_db }}"
+    DJANGO_ALLOWED_HOSTS: "*"
+    DJANGO_SECRET_KEY: "{{ sodar_core_app_django_secret_key }}"
+    DJANGO_SETTINGS_MODULE: "config.settings.production"
+    LC_ALL: en_US.UTF-8
+  shell: |
+    set -xeo pipefail
+    source /srv/{{ sodar_core_app_name }}-web/{{ sodar_core_app_version }}-venv/bin/activate
+    echo "from django.contrib.auth import get_user_model; User = get_user_model(); \
+      User.objects.create_superuser("{{ sodar_core_app_superuser }}", \
+      "{{ sodar_core_app_superuser_email }}", "{{ sodar_core_app_superuser_password }}")" \
+    | python manage.py shell
+    touch /srv/{{ sodar_core_app_name }}-web/.superuser-created
+  args:
+    chdir: /srv/{{ sodar_core_app_name }}-web/{{ sodar_core_app_version }}
+    creates: /srv/{{ sodar_core_app_name }}-web/.superuser-created
+  no_log: True
+
+# Build docs --------------------------------------------------------------------------------------
+
+- name: build site manual with Sphinx
+  environment:
+    LC_ALL: en_US.UTF-8
+  shell: |
+    source /srv/{{ sodar_core_app_name }}-web/{{ sodar_core_app_version }}-venv/bin/activate
+    cd /srv/{{ sodar_core_app_name }}-web/{{ sodar_core_app_version }}/docs_manual
+    make clean html
+  when: sodar_core_app_build_docs and clone_repo.changed
+  tags: [skip_ansible_lint]  # TODO: move to handler?

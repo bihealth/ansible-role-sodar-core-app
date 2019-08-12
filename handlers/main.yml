@@ -1,0 +1,13 @@
+---
+
+- name: restart sodar-core-app-web
+  systemd: name={{ sodar_core_app_name }}-web state=restarted
+
+- name: restart sodar-core-app-celeryd
+  systemd: name={{ sodar_core_app_name }}-celeryd-{{ item.name }} state=restarted
+  loop: "{{ sodar_core_app_celeryd_workers }}"
+  when: sodar_core_app_celery_enabled
+
+- name: restart sodar-core-app-celerybeat
+  systemd: name={{ sodar_core_app_name }}-celerybeat state=restarted
+  when: sodar_core_app_celery_enabled
