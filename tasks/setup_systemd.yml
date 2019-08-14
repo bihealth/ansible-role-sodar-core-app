@@ -6,7 +6,7 @@
     state: directory
     dest: /var/log/{{ sodar_core_app_name }}
     owner: "{{ sodar_core_app_name }}"
-    group: nobody
+    group: "{{ sodar_core_app_nogroup_name }}"
 
 - name: install systemd environment file
   template:
@@ -16,7 +16,7 @@
     - restart sodar-core-app-web
     - restart sodar-core-app-celeryd
     - restart sodar-core-app-celerybeat
-  no_log: true  # contains passwords
+  no_log: "{{ sodar_core_app_enable_no_log }}"  # contains passwords
 
 - name: install web systemd unit files
   template:

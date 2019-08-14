@@ -2,3 +2,4 @@
 
 sodar_core_app_lib_openldap_clients: ldap-utils
 sodar_core_app_lib_openldap_devel: libldap2-dev
+sodar_core_app_nogroup_name: nogroup

@@ -19,6 +19,9 @@
 
 # Important Settings (you might want to override these) -------------------------------------------
 
+# Allow for disabling no_log.
+sodar_core_app_enable_no_log: true
+
 # The email address of the superuser.
 sodar_core_app_superuser_email: admin@example.com
 

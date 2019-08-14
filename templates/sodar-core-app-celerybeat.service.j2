@@ -7,7 +7,7 @@ Before=nginx.service {{ sodar_core_app_name }}-web.service
 [Service]
 RuntimeDirectory={{ sodar_core_app_name }}
 User={{ sodar_core_app_name }}
-Group=nobody
+Group={{ sodar_core_app_nogroup_name }}
 WorkingDirectory=/srv/{{ sodar_core_app_name }}-web/{{ sodar_core_app_version }}
 EnvironmentFile=/etc/systemd/system/{{ sodar_core_app_name }}-env.sh
 PIDFile=/var/run/{{ sodar_core_app_name }}/{{ sodar_core_app_name }}-celerybeat.pid

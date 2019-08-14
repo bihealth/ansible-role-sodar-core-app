@@ -7,25 +7,25 @@ Before=nginx.service
 [Service]
 RuntimeDirectory={{ sodar_core_app_name }}
 User={{ sodar_core_app_name }}
-Group=nobody
-WorkingDirectory=/srv/digestiflow-web/{{ sodar_core_app_version }}
+Group={{ sodar_core_app_nogroup_name }}
+WorkingDirectory=/srv/{{ sodar_core_app_name }}-web/{{ sodar_core_app_version }}
 EnvironmentFile=/etc/systemd/system/{{ sodar_core_app_name }}-env.sh
-PIDFile=/var/run/{{ sodar_core_app_name }}/{{ sodar_core_app_name }}.pid
+PIDFile=/var/run/{{ sodar_core_app_name }}/{{ sodar_core_app_name }}-web.pid
 Type=forking
 KillMode=process
 Restart=always
 ExecStart=/srv/{{ sodar_core_app_name }}-web/{{ sodar_core_app_version }}-venv/bin/gunicorn \
           config.wsgi \
-          --group nobody \
+          --group {{ sodar_core_app_nogroup_name }} \
           --timeout 300 \
           --user {{ sodar_core_app_name }} \
           --worker-class gevent \
           --workers 8 \
           --worker-connections 1000 \
           --bind={{ sodar_core_app_host }}:{{ sodar_core_app_port }} \
-          --pid=/var/run/{{ sodar_core_app_host }}-web/{{ sodar_core_app_host }}.pid \
-          --pythonpath=/srv/{{ sodar_core_app_host }}-web/{{ DIGESTIFLOW_VERSION }} \
-          --error-logfile=/var/log/{{ sodar_core_app_host }}/{{ sodar_core_app_host }}-web.error \
+          --pid=/var/run/{{ sodar_core_app_name }}/{{ sodar_core_app_name }}-web.pid \
+          --pythonpath=/srv/{{ sodar_core_app_name }}-web/{{ sodar_core_app_version }} \
+          --error-logfile=/var/log/{{ sodar_core_app_name }}/{{ sodar_core_app_name }}-web.error \
           --daemon
 
 [Install]

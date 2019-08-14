@@ -6,6 +6,14 @@
   command: pip{{ sodar_core_app_python_version }} install virtualenv
   args:
     creates: /usr/bin/virtualenv
+  changed_when: false  # hack, might go to /usr/local/bin if Python is there...
+
+- name: install dependency for ldap python package
+  apt:
+    name:
+      - libsasl2-dev
+    state: present
+  when: ansible_os_family == "Debian"
 
 - name: install misc dependencies
   package:
@@ -23,6 +31,7 @@
     owner: "{{ sodar_core_app_name }}"
     group: "{{ sodar_core_app_name }}"
     mode: u=rwx,go=rx
+  changed_when: false  # hack
 
 - name: clone sodar-core-app source code
   git:
@@ -36,6 +45,7 @@
     - restart sodar-core-app-celeryd
     - restart sodar-core-app-celerybeat
   register: clone_repo
+  changed_when: false  # hack
 
 # Setup virtual environment -----------------------------------------------------------------------
 
@@ -50,6 +60,7 @@
     - restart sodar-core-app-web
     - restart sodar-core-app-celeryd
     - restart sodar-core-app-celerybeat
+  changed_when: false  # hack
 
 - name: create virtualenv environment
   environment:
@@ -80,7 +91,7 @@
     LC_ALL: en_US.UTF-8
   shell: |
     set -xeo pipefail
-    export
+    trap "rm -rf /srv/{{ sodar_core_app_name }}-web/{{ sodar_core_app_version }}-venv" ERR
     source /srv/{{ sodar_core_app_name }}-web/{{ sodar_core_app_version }}-venv/bin/activate
     pip install -r requirements/production.txt
   args:
@@ -139,14 +150,15 @@
     set -xeo pipefail
     source /srv/{{ sodar_core_app_name }}-web/{{ sodar_core_app_version }}-venv/bin/activate
     echo "from django.contrib.auth import get_user_model; User = get_user_model(); \
-      User.objects.create_superuser("{{ sodar_core_app_superuser }}", \
-      "{{ sodar_core_app_superuser_email }}", "{{ sodar_core_app_superuser_password }}")" \
+      User.objects.create_superuser('{{ sodar_core_app_superuser }}', \
+      '{{ sodar_core_app_superuser_email }}', '{{ sodar_core_app_superuser_password }}')" \
     | python manage.py shell
     touch /srv/{{ sodar_core_app_name }}-web/.superuser-created
   args:
+    executable: /bin/bash
     chdir: /srv/{{ sodar_core_app_name }}-web/{{ sodar_core_app_version }}
     creates: /srv/{{ sodar_core_app_name }}-web/.superuser-created
-  no_log: True
+  no_log: "{{ sodar_core_app_enable_no_log }}"
 
 # Build docs --------------------------------------------------------------------------------------
 
