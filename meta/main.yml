@@ -1,7 +1,7 @@
 ---
 
 galaxy_info:
-  role_name: bihealth.ansible-role-sodar-core-app
+  role_name: sodar_core_app
   author: Manuel Holtgrewe
   description: An "abstract base role" for SODAR Core Apps.
   company: Core Unit Bioinformatics (CUBI), Berlin Institute of Health (BIH)
