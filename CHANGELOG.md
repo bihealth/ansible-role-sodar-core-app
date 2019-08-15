@@ -2,6 +2,7 @@
 
 ## HEAD (unreleased)
 
+- Adding make package.
 - Support for installing embedded Vue.js apps.
 
 ## v0.1.3

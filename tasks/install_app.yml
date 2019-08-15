@@ -18,6 +18,7 @@
 - name: install misc dependencies
   package:
     name:
+      - make
       - gcc
       - "{{ sodar_core_app_lib_openldap_clients }}"
       - "{{ sodar_core_app_lib_openldap_devel }}"
@@ -203,8 +204,10 @@
     LC_ALL: en_US.UTF-8
   shell: |
     source /srv/{{ sodar_core_app_name }}-web/{{ sodar_core_app_version }}-venv/bin/activate
-    cd /srv/{{ sodar_core_app_name }}-web/{{ sodar_core_app_version }}/docs_manual
     make clean html
+  args:
+    executable: /bin/bash
+    chdir: /srv/{{ sodar_core_app_name }}-web/{{ sodar_core_app_version }}/docs_manual
   when: sodar_core_app_build_docs # and clone_repo.changed
   changed_when: false  # hack, must always build
   tags: [skip_ansible_lint]  # TODO: move to handler?

@@ -1,6 +1,12 @@
 # TODO: move into role and depend on it.
 ---
 
+- name: install apt-transport-https
+  apt:
+    name:
+      - apt-transport-https
+    state: present
+
 - name: import nodesource APT key
   apt_key:
     url: https://deb.nodesource.com/gpgkey/nodesource.gpg.key
