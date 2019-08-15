@@ -1,6 +1,6 @@
 # Changelog
 
-## HEAD (unreleased)
+## v0.1.3
 
 - Making web worker coutn configurable.
 - Making celery worker count configurable.
