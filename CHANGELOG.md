@@ -1,6 +1,6 @@
 # Changelog
 
-## HEAD (unreleased)
+## v0.1.4
 
 - Adding make package.
 - Support for installing embedded Vue.js apps.
