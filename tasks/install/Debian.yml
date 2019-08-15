@@ -1,0 +1,26 @@
+# TODO: move into role and depend on it.
+---
+
+- name: import nodesource APT key
+  apt_key:
+    url: https://deb.nodesource.com/gpgkey/nodesource.gpg.key
+    state: present
+  when: sodar_core_vuejs_apps|length>0
+
+- name: add apt repository for nodesource
+  apt_repository:
+    repo: |
+      {{ item }} https://deb.nodesource.com/node_10.x {{ ansible_distribution_release }} main
+    state: present
+    filename: nodesource
+  loop:
+    - deb
+    - deb-src
+  when: sodar_core_vuejs_apps|length>0
+
+- name: ensure Node.js v10.x and npm are installed.
+  apt:
+    name:
+      - nodejs
+    state: present
+  when: sodar_core_vuejs_apps|length>0

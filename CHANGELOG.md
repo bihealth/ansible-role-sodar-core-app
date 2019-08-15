@@ -1,5 +1,9 @@
 # Changelog
 
+## HEAD (unreleased)
+
+- Support for installing embedded Vue.js apps.
+
 ## v0.1.3
 
 - Making web worker coutn configurable.

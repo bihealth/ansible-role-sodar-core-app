@@ -54,6 +54,9 @@ sodar_core_app_ldap:  # up to two atm
     domain: "EXAMPLE2"
     domain_printable: "Example Site #2"
 
+# A list of Vue.js apps to install.
+sodar_core_vuejs_apps: []
+
 # Other Settings (the defaults are sensible for most cases) ---------------------------------------
 
 # Superuser name.

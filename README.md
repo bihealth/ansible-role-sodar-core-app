@@ -28,6 +28,7 @@ See any of the roles depending on this.
 ## Open Issues
 
 - Possibly remove dependency on `bihealth.memcached`.
+- Move NPM installation into its own role.
 
 ## License
 

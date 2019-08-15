@@ -47,6 +47,34 @@
   register: clone_repo
   changed_when: false  # hack
 
+# Setup Vue.js apps -------------------------------------------------------------------------------
+
+- name: install vue.js app packages
+  shell: |
+    cd /srv/{{ sodar_core_app_name }}-web/{{ sodar_core_app_version }}/{{ item }}
+    npm ci  # "ci" installs from package-lock.json without modifying the repo
+  loop: "{{ sodar_core_vuejs_apps }}"
+  # when: clone_repo.changed
+  changed_when: false  # hack, must always do
+
+- name: delete previous vue.js apps builds
+  file:
+    state: absent
+    path: "/srv/{{ sodar_core_app_name }}-web/{{ sodar_core_app_version }}/{{ item }}/dist/"
+  loop: "{{ sodar_core_vuejs_apps }}"
+  # when: clone_repo.changed
+  changed_when: false  # hack, must always do
+
+- name: build production version of vue.js apps
+  shell: |
+    cd /srv/{{ sodar_core_app_name }}-web/{{ sodar_core_app_version }}/{{ item }}
+    npm run build
+  loop: "{{ sodar_core_vuejs_apps }}"
+  register: build_vue_app
+  # when: clone_repo.changed
+  changed_when: false  # hack, must always do
+
+
 # Setup virtual environment -----------------------------------------------------------------------
 
 - name: ensure virtual env target exists
@@ -105,6 +133,14 @@
   tags: [skip_ansible_lint]  # TODO: move to handler?
 
 # Prepare site and superuser ----------------------------------------------------------------------
+
+- name: delete previous version of samplesheets vue.js app build
+  file:
+    state: absent
+    path: "/srv/{{ sodar_core_app_name }}/{{ sodar_core_app_version }}/staticfiles/{{ item }}-vue/"
+  loop: "{{ sodar_core_vuejs_apps }}"
+  # when: build_vue_app.changed
+  changed_when: false  # hack, must always do
 
 - name: django -- prepare static files
   environment:
@@ -169,5 +205,6 @@
     source /srv/{{ sodar_core_app_name }}-web/{{ sodar_core_app_version }}-venv/bin/activate
     cd /srv/{{ sodar_core_app_name }}-web/{{ sodar_core_app_version }}/docs_manual
     make clean html
-  when: sodar_core_app_build_docs and clone_repo.changed
+  when: sodar_core_app_build_docs # and clone_repo.changed
+  changed_when: false  # hack, must always build
   tags: [skip_ansible_lint]  # TODO: move to handler?

@@ -1,0 +1,18 @@
+# TODO: move into role and depend on it.
+---
+
+- name: import nodesource RPM key
+  rpm_key:
+    key: https://rpm.nodesource.com/pub/el/NODESOURCE-GPG-SIGNING-KEY-EL
+    state: present
+  when: sodar_core_vuejs_apps|length>0
+
+- name: add Nodesource repositories for Node.js v10.x
+  yum:
+    name: "https://rpm.nodesource.com/pub_10.x/el/7/x86_64/nodesource-release-el7-1.noarch.rpm"
+    state: present
+  when: sodar_core_vuejs_apps|length>0
+
+- name: ensure Node.js v10.x and npm are installed.
+  yum: "name=nodejs-10.* state=present enablerepo='nodesource'"
+  when: sodar_core_vuejs_apps|length>0

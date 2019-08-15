@@ -1,5 +1,8 @@
 ---
 
+- name: perform installation
+  include_tasks: install/{{ ansible_os_family }}.yml
+
 - name: define distribution-specific variables
   include_vars: "{{ ansible_os_family }}.yml"
 
