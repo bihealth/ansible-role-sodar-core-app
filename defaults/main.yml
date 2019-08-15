@@ -73,6 +73,9 @@ sodar_core_app_projectroles_send_email: true
 # The web server to use.
 sodar_core_app_webserver: gunicorn
 
+# The number of web workers to use.
+sodar_core_app_webserver_workers: 8
+
 # The Python version to use.
 sodar_core_app_python_version: 3.6
 
@@ -88,8 +91,11 @@ sodar_core_app_docker_enabled: false
 # Whether or not the app is Celery-enabled.
 sodar_core_app_celery_enabled: false
 
+# Number of celery workers to spawn for default queue.
+sodar_core_app_celery_workers_default: 8
+
 # Definition of the Celery workers, if enabled.
 sodar_core_app_celeryd_workers:
   - name: default
     queues: default
-    concurrency: 8
+    concurrency: "{{ sodar_core_app_celery_workers_default }}"

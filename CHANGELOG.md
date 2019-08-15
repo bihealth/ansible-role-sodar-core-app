@@ -1,5 +1,10 @@
 # Changelog
 
+## HEAD (unreleased)
+
+- Making web worker coutn configurable.
+- Making celery worker count configurable.
+
 ## v0.1.2
 
 - Adding sasl dependency.

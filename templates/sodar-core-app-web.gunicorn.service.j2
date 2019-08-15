@@ -20,7 +20,7 @@ ExecStart=/srv/{{ sodar_core_app_name }}-web/{{ sodar_core_app_version }}-venv/b
           --timeout 300 \
           --user {{ sodar_core_app_name }} \
           --worker-class gevent \
-          --workers 8 \
+          --workers {{ sodar_core_app_webserver_workers }} \
           --worker-connections 1000 \
           --bind={{ sodar_core_app_host }}:{{ sodar_core_app_port }} \
           --pid=/var/run/{{ sodar_core_app_name }}/{{ sodar_core_app_name }}-web.pid \
