@@ -57,6 +57,9 @@ sodar_core_app_ldap:  # up to two atm
 # A list of Vue.js apps to install.
 sodar_core_vuejs_apps: []
 
+# A snippet to insert into the `{{ sodar_core_app_name }}-env.sh` file.
+sodar_core_app_systemd_env_snippet: ""
+
 # Other Settings (the defaults are sensible for most cases) ---------------------------------------
 
 # Superuser name.
@@ -68,10 +71,16 @@ sodar_core_app_host: 127.0.0.1
 # The port to listen to.
 sodar_core_app_port: 8000
 
-# Whether the SODARE Core projectroles app should send out emails (if emails are enabled).
-sodar_core_app_projectroles_send_email: true
+# Whether the SODAR Core projectroles app should send out emails (if emails are enabled).
+sodar_core_app_projectroles_send_email: false
+
+# Whether or not to allow local users.
+sodar_core_app_allow_local_users: true
 
 # Internal Settings (to be overridden by roles extending this) ------------------------------------
+
+# The name of the deafult admin.
+sodar_core_app_default_admin: root
 
 # The web server to use.
 sodar_core_app_webserver: gunicorn

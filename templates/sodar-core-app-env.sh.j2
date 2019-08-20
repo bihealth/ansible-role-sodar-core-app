@@ -1,6 +1,9 @@
+LC_ALL=en_US.UTF-8
+
 DATABASE_URL="postgresql://{{ postgres_client_user }}:{{ postgres_client_password }}@{{ postgres_client_host }}/{{ postgres_client_db }}"
 
-{% if sodar_core_app_email_enabled %}}
+{% if sodar_core_app_email_enabled %}
+PROJECTROLES_SEND_EMAIL=1
 EMAIL_SENDER="{{ sodar_core_app_email_sender }}"
 EMAIL_SUBJECT_PREFIX="{{ sodar_core_app_email_prefix }}"
 EMAIL_URL="{{ sodar_core_app_email_url }}"
@@ -30,9 +33,12 @@ AUTH_LDAP2_USERNAME_DOMAIN="{{ sodar_core_app_ldap.1.domain }}"
 AUTH_LDAP2_DOMAIN_PRINTABLE="{{ sodar_core_app_ldap.1.domain_printable }}"
 {% endif %}
 
-PROJECTROLES_SEND_EMAIL="{% if sodar_core_app_projectroles_send_email %}1{% else %}0{% endif %}"
 ENABLED_BACKEND_PLUGINS="{{ sodar_core_app_backend_plugins|join(",") }}"
 PROJECTROLES_ADMIN_OWNER="{{ sodar_core_app_superuser }}"
+PROJECTROLES_DEFAULT_ADMIN="{{ sodar_core_app_superuser }}"
+PROJECTROLES_ALLOW_LOCAL_USERS={{ sodar_core_app_allow_local_users }}
 
 CELERY_CHDIR="/srv/{{ sodar_core_app_name }}-web/{{ sodar_core_app_version }}"
 CELERY_CREATE_DIRS="1"
+
+{{ sodar_core_app_systemd_env_snippet }}

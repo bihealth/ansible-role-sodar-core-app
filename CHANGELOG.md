@@ -1,5 +1,9 @@
 # Changelog
 
+## v0.1.5
+
+- Various smaller updates to configuration.
+
 ## v0.1.4
 
 - Adding make package.
