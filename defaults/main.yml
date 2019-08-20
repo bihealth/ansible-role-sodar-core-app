@@ -109,5 +109,6 @@ sodar_core_app_celery_workers_default: 8
 # Definition of the Celery workers, if enabled.
 sodar_core_app_celeryd_workers:
   - name: default
-    queues: default
+    queues:
+      - default
     concurrency: "{{ sodar_core_app_celery_workers_default }}"
