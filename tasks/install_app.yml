@@ -26,13 +26,15 @@
 
 - name: ensure clone target exists
   file:
-    recurse: true
     state: directory
-    dest: /srv/{{ sodar_core_app_name }}-web/{{ sodar_core_app_version }}
+    dest: "{{ item }}"
     owner: "{{ sodar_core_app_name }}"
     group: "{{ sodar_core_app_name }}"
     mode: u=rwx,go=rx
-  changed_when: false  # hack
+  loop:
+    - /srv
+    - /srv/{{ sodar_core_app_name }}-web/
+    - /srv/{{ sodar_core_app_name }}-web/{{ sodar_core_app_version }}
 
 - name: clone sodar-core-app source code
   git:
@@ -40,13 +42,11 @@
     dest: /srv/{{ sodar_core_app_name }}-web/{{ sodar_core_app_version }}
     version: "{{ sodar_core_app_version }}"
     accept_hostkey: true
-    force: true
   notify:
     - restart sodar-core-app-web
     - restart sodar-core-app-celeryd
     - restart sodar-core-app-celerybeat
   register: clone_repo
-  changed_when: false  # hack
 
 # Setup Vue.js apps -------------------------------------------------------------------------------
 

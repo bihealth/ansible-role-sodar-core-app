@@ -1,6 +1,10 @@
 # Changelog
 
-## v0.1.6.
+## v0.1.7
+
+- Properly creating checkout directory and git clone.
+
+## v0.1.6
 
 - Fixing queues configuration.
 
