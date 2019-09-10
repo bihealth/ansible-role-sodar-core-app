@@ -1,5 +1,9 @@
 # Changelog
 
+## v0.1.8
+
+- Adjusting blockinfile marker for `~/.bashrc`.
+
 ## v0.1.7
 
 - Properly creating checkout directory and git clone.

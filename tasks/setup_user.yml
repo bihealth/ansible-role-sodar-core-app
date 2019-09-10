@@ -30,5 +30,6 @@
 - name: source SODAR Core app bashrc file in .bashrc
   blockinfile:
     path: /srv/{{ sodar_core_app_name }}-web/.bashrc
+    marker: "# {mark} include SODAR Core app bashrc"
     block: |
       source /srv/{{ sodar_core_app_name }}-web/.bashrc.sodar_core_app
