@@ -3,7 +3,7 @@
 # SODAR Core app installation ---------------------------------------------------------------------
 
 - name: install virtualenv
-  command: pip{{ sodar_core_app_python_version }} install virtualenv
+  command: /usr/local/bin/pip{{ sodar_core_app_python_version }} install virtualenv
   args:
     creates: /usr/bin/virtualenv
   changed_when: false  # hack, might go to /usr/local/bin if Python is there...
@@ -101,7 +101,7 @@
   shell: |
     set -xeo pipefail
     trap "rm -rf /srv/{{ sodar_core_app_name }}-web/{{ sodar_core_app_version }}-venv" ERR
-    virtualenv -p /usr/bin/python{{ sodar_core_app_python_version }} /srv/{{ sodar_core_app_name }}-web/{{ sodar_core_app_version }}-venv
+    /usr/local/bin/virtualenv -p /usr/bin/python{{ sodar_core_app_python_version }} /srv/{{ sodar_core_app_name }}-web/{{ sodar_core_app_version }}-venv
   args:
     executable: /bin/bash
     creates: /srv/{{ sodar_core_app_name }}-web/{{ sodar_core_app_version }}-venv/bin/activate
