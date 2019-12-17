@@ -1,6 +1,12 @@
 # TODO: move into role and depend on it.
 ---
 
+- name: install dependencies
+  yum:
+    name:
+      - git
+    state: present
+
 - name: import nodesource RPM key
   rpm_key:
     key: https://rpm.nodesource.com/pub/el/NODESOURCE-GPG-SIGNING-KEY-EL

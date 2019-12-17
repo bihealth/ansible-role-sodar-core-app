@@ -1,5 +1,9 @@
 # Changelog
 
+## v0.1.10
+
+- Installation of dependency git.
+
 ## v0.1.9
 
 - Making work when running via sudo.
