@@ -1,6 +1,6 @@
 # Changelog
 
-## HEAD (unreleased)
+## v0.1.11
 
 - Fixing issue with virtualenv installation.
 
