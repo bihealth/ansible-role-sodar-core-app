@@ -1,5 +1,9 @@
 # Changelog
 
+## HEAD (unreleased)
+
+- Fixing issue with virtualenv installation.
+
 ## v0.1.10
 
 - Installation of dependency git.
