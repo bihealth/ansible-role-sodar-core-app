@@ -1,5 +1,9 @@
 # Changelog
 
+## v0.1.13
+
+- Adding `sodar_core_app_conn_max_age`.
+
 ## v0.1.12
 
 - Fixing another issue with virtualenv.

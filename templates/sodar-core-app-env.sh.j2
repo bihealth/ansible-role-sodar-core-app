@@ -1,6 +1,7 @@
 LC_ALL=en_US.UTF-8
 
 DATABASE_URL="postgresql://{{ postgres_client_user }}:{{ postgres_client_password }}@{{ postgres_client_host }}/{{ postgres_client_db }}"
+CONN_MAX_AGE={{ sodar_core_app_conn_max_age }}
 
 {% if sodar_core_app_email_enabled %}
 PROJECTROLES_SEND_EMAIL=1

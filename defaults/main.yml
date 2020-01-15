@@ -77,6 +77,9 @@ sodar_core_app_projectroles_send_email: false
 # Whether or not to allow local users.
 sodar_core_app_allow_local_users: true
 
+# CONN_MAX_AGE setting, set to 0 to close immediately, to -1 to never expire.
+sodar_core_app_conn_max_age: 0
+
 # Internal Settings (to be overridden by roles extending this) ------------------------------------
 
 # The name of the deafult admin.
