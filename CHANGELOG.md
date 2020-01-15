@@ -1,5 +1,9 @@
 # Changelog
 
+## v0.1.12
+
+- Fixing another issue with virtualenv.
+
 ## v0.1.11
 
 - Fixing issue with virtualenv installation.

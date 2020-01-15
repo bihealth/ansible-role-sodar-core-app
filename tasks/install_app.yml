@@ -101,7 +101,7 @@
   shell: |
     set -xeo pipefail
     trap "rm -rf /srv/{{ sodar_core_app_name }}-web/{{ sodar_core_app_version }}-venv" ERR
-    /usr/bin/virtualenv -p /usr/bin/python{{ sodar_core_app_python_version }} /srv/{{ sodar_core_app_name }}-web/{{ sodar_core_app_version }}-venv
+    $(which virtualenv) -p /usr/bin/python{{ sodar_core_app_python_version }} /srv/{{ sodar_core_app_name }}-web/{{ sodar_core_app_version }}-venv
   args:
     executable: /bin/bash
     creates: /srv/{{ sodar_core_app_name }}-web/{{ sodar_core_app_version }}-venv/bin/activate
