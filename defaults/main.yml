@@ -60,6 +60,15 @@ sodar_core_vuejs_apps: []
 # A snippet to insert into the `{{ sodar_core_app_name }}-env.sh` file.
 sodar_core_app_systemd_env_snippet: ""
 
+# Activate/deactivate CDN includes.
+sodar_core_app_disable_cdn_includes: false
+
+# Custom CSS includes (e.g., not from CDN)
+sodar_core_app_custom_css_includes: []
+
+# Custom JS includes (e.g., not from CDN)
+sodar_core_app_custom_js_includes: []
+
 # Other Settings (the defaults are sensible for most cases) ---------------------------------------
 
 # Superuser name.
@@ -115,3 +124,6 @@ sodar_core_app_celeryd_workers:
     queues:
       - default
     concurrency: "{{ sodar_core_app_celery_workers_default }}"
+
+# Write static local files here.
+sodar_core_app_static_local: /srv/{{ sodar_core_app_name }}-web/{{ sodar_core_app_version }}/static-local

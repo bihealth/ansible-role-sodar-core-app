@@ -6,6 +6,6 @@
 - name: define distribution-specific variables
   include_vars: "{{ ansible_os_family }}.yml"
 
-- include_tasks: setup_user.yml
+#- include_tasks: setup_user.yml
 - include_tasks: install_app.yml
 - include_tasks: setup_systemd.yml

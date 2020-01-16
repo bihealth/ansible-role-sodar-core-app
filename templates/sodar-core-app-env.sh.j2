@@ -42,4 +42,9 @@ PROJECTROLES_ALLOW_LOCAL_USERS={{ sodar_core_app_allow_local_users }}
 CELERY_CHDIR="/srv/{{ sodar_core_app_name }}-web/{{ sodar_core_app_version }}"
 CELERY_CREATE_DIRS="1"
 
+PROJECTROLES_DISABLE_CDN_INCLUDES={{ 1 if sodar_core_app_disable_cdn_includes else 0 }}
+PROJECTROLES_CUSTOM_JS_INCLUDES={{ sodar_core_app_custom_js_includes|map(attribute="served_as")|join(",") }}
+PROJECTROLES_CUSTOM_CSS_INCLUDES={{ sodar_core_app_custom_css_includes|map(attribute="served_as")|join(",") }}
+CUSTOM_STATIC_DIR={{ sodar_core_app_static_local }}
+
 {{ sodar_core_app_systemd_env_snippet }}

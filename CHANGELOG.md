@@ -1,5 +1,9 @@
 # Changelog
 
+## v0.1.14
+
+- Adding support for custom JS/CSS includes and disabling CDN includes.
+
 ## v0.1.13
 
 - Adding `sodar_core_app_conn_max_age`.

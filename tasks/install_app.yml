@@ -75,6 +75,31 @@
   # when: clone_repo.changed
   changed_when: false  # hack, must always do
 
+# Download files from CDN if configured -----------------------------------------------------------
+
+- name: create JS and CSS download directories
+  file:
+    state: directory
+    path: "{{ item.dest|dirname }}"
+  loop: "{{ [sodar_core_app_custom_css_includes, sodar_core_app_custom_js_includes, sodar_core_app_custom_static_files]|flatten }}"
+
+- name: download CSS files from CDN
+  get_url:
+    url: "{{ item.url }}"
+    dest: "{{ item.dest }}"
+  loop: "{{ sodar_core_app_custom_css_includes }}"
+
+- name: download JS files from CDN
+  get_url:
+    url: "{{ item.url }}"
+    dest: "{{ item.dest }}"
+  loop: "{{ sodar_core_app_custom_js_includes }}"
+
+- name: download other static files from CDN
+  get_url:
+    url: "{{ item.url }}"
+    dest: "{{ item.dest }}"
+  loop: "{{ sodar_core_app_custom_static_files }}"
 
 # Setup virtual environment -----------------------------------------------------------------------
 
