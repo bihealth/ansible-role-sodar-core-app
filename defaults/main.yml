@@ -63,11 +63,29 @@ sodar_core_app_systemd_env_snippet: ""
 # Activate/deactivate CDN includes.
 sodar_core_app_disable_cdn_includes: false
 
+# Custom static files.
+sodar_core_app_custom_static_files: []
+
 # Custom CSS includes (e.g., not from CDN)
 sodar_core_app_custom_css_includes: []
 
 # Custom JS includes (e.g., not from CDN)
 sodar_core_app_custom_js_includes: []
+
+# Enable sentry release tracking.
+sodar_core_app_sentry_enable_releases: false
+
+# Sentry auth token.
+sodar_core_app_sentry_auth_token: "{{ lookup('env', 'SENTRY_AUTH_TOKEN') }}"
+
+# The sentry organization to use.
+sodar_core_app_sentry_org: ""
+
+# The sentry project to use.
+sodar_core_app_sentry_project: ""
+
+# The sentry URL to use.
+sodar_core_app_sentry_url: ""
 
 # Other Settings (the defaults are sensible for most cases) ---------------------------------------
 

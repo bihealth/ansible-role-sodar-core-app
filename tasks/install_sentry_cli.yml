@@ -1,0 +1,7 @@
+---
+
+- name: install sentry CLI
+  script:
+    cmd: scripts/install-sentry-cli.sh
+    executable: /bin/bash
+    creates: /usr/local/bin/sentry-cli

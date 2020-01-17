@@ -1,7 +1,8 @@
 # Changelog
 
-## HEAD (unreleased)
+## v0.2.0
 
+- Adding support for registering of sentry releases.
 - Bugfix staticfiles.
 
 ## v0.1.14
