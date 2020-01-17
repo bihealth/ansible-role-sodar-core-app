@@ -1,5 +1,9 @@
 # Changelog
 
+## HEAD (unreleased)
+
+- Bugfix staticfiles.
+
 ## v0.1.14
 
 - Adding support for custom JS/CSS includes and disabling CDN includes.
