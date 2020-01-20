@@ -11,6 +11,10 @@
         export $name
     done
     source /srv/{{ sodar_core_app_name }}-web/{{ sodar_core_app_version }}-venv/bin/activate
+
+    # Force-disable sentry integration.
+    export ENABLE_SENTRY=0
+    unset SENTRY_DSN=
 }
 
 # -----------------------------------------------------------------------------------------------

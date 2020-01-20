@@ -1,5 +1,9 @@
 # Changelog
 
+## HEAD (unreleased)
+
+- Force-disabling sentry integration.
+
 ## v0.2.0
 
 - Adding support for registering of sentry releases.
