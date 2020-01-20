@@ -1,6 +1,6 @@
 # Changelog
 
-## HEAD (unreleased)
+## v0.3.0
 
 - Force-disabling sentry integration.
 - Using `git describe --tags`.
