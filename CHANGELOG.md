@@ -3,6 +3,7 @@
 ## HEAD (unreleased)
 
 - Force-disabling sentry integration.
+- Using `git describe --tags`.
 
 ## v0.2.0
 

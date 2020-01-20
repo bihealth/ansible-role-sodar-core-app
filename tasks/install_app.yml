@@ -55,8 +55,7 @@
     SENTRY_URL: "{{ sodar_core_app_sentry_url }}"
     SENTRY_LOG_LEVEL: debug
   shell: |
-    set -x;
-    VERSION=$(git describe);
+    VERSION=$(git describe --tags);
     sentry-cli --auth-token {{ sodar_core_app_sentry_auth_token }} releases -p {{ sodar_core_app_sentry_project }} new $VERSION;
     sentry-cli --auth-token {{ sodar_core_app_sentry_auth_token }} releases set-commits --auto $VERSION;
     sentry-cli --auth-token {{ sodar_core_app_sentry_auth_token }} releases finalize $VERSION
