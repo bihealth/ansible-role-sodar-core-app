@@ -1,6 +1,6 @@
 # Changelog
 
-## HEAD (unreleased)
+## v0.3.1
 
 - Fixing log generation with gunicorn.
 
