@@ -1,5 +1,9 @@
 # Changelog
 
+## HEAD (unreleased)
+
+- Fixing log generation with gunicorn.
+
 ## v0.3.0
 
 - Force-disabling sentry integration.
