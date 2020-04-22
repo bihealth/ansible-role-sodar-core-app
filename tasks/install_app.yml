@@ -48,21 +48,21 @@
     - restart sodar-core-app-celerybeat
   register: clone_repo
 
-- name: register release with Sentry
-  environment:
-    SENTRY_ORG: "{{ sodar_core_app_sentry_org }}"
-    SENTRY_PROJECT: "{{ sodar_core_app_sentry_project }}"
-    SENTRY_URL: "{{ sodar_core_app_sentry_url }}"
-    SENTRY_LOG_LEVEL: debug
-  shell: |
-    VERSION=$(git describe --tags);
-    sentry-cli --auth-token {{ sodar_core_app_sentry_auth_token }} releases -p {{ sodar_core_app_sentry_project }} new $VERSION;
-    sentry-cli --auth-token {{ sodar_core_app_sentry_auth_token }} releases set-commits --auto $VERSION;
-    sentry-cli --auth-token {{ sodar_core_app_sentry_auth_token }} releases finalize $VERSION
-  args:
-    executable: /bin/bash
-    chdir: /srv/{{ sodar_core_app_name }}-web/{{ sodar_core_app_version }}
-  when: sodar_core_app_sentry_enable_releases
+#- name: register release with Sentry
+#  environment:
+#    SENTRY_ORG: "{{ sodar_core_app_sentry_org }}"
+#    SENTRY_PROJECT: "{{ sodar_core_app_sentry_project }}"
+#    SENTRY_URL: "{{ sodar_core_app_sentry_url }}"
+#    SENTRY_LOG_LEVEL: debug
+#  shell: |
+#    VERSION=$(git describe --tags);
+#    sentry-cli --auth-token {{ sodar_core_app_sentry_auth_token }} releases -p {{ sodar_core_app_sentry_project }} new $VERSION;
+#    sentry-cli --auth-token {{ sodar_core_app_sentry_auth_token }} releases set-commits --auto $VERSION;
+#    sentry-cli --auth-token {{ sodar_core_app_sentry_auth_token }} releases finalize $VERSION
+#  args:
+#    executable: /bin/bash
+#    chdir: /srv/{{ sodar_core_app_name }}-web/{{ sodar_core_app_version }}
+#  when: sodar_core_app_sentry_enable_releases
 
 # Setup Vue.js apps -------------------------------------------------------------------------------
 
@@ -210,7 +210,12 @@
     DJANGO_SETTINGS_MODULE: "config.settings.production"
     LC_ALL: en_US.UTF-8
   shell: |
+    set -x
     source /srv/{{ sodar_core_app_name }}-web/{{ sodar_core_app_version }}-venv/bin/activate
+    source /etc/systemd/system/{{ sodar_core_app_name }}-env.sh
+    for name in $(grep '^.*=' /etc/systemd/system/{{ sodar_core_app_name }}-env.sh | sed -e 's/=.*//'); do
+        export $name
+    done
     python manage.py migrate
   args:
     executable: /bin/bash
