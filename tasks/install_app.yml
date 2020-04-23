@@ -249,6 +249,10 @@
 - name: build site manual with Sphinx
   environment:
     LC_ALL: en_US.UTF-8
+    DATABASE_URL: "postgresql://{{ postgres_client_user }}:{{ postgres_client_password }}@{{ postgres_client_host }}/{{ postgres_client_db }}"
+    DJANGO_ALLOWED_HOSTS: "*"
+    DJANGO_SECRET_KEY: "{{ sodar_core_app_django_secret_key }}"
+    DJANGO_SETTINGS_MODULE: "config.settings.production"
   shell: |
     source /srv/{{ sodar_core_app_name }}-web/{{ sodar_core_app_version }}-venv/bin/activate
     make clean html
