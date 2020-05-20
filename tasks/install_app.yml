@@ -68,7 +68,7 @@
 
 - name: install vue.js app packages
   shell: |
-    cd /srv/{{ sodar_core_app_name }}-web/{{ sodar_core_app_version }}/{{ item }}
+    cd /srv/{{ sodar_core_app_name }}-web/{{ sodar_core_app_version }}/{{ item }}/vueapp
     npm ci  # "ci" installs from package-lock.json without modifying the repo
   loop: "{{ sodar_core_vuejs_apps }}"
   # when: clone_repo.changed
@@ -77,14 +77,14 @@
 - name: delete previous vue.js apps builds
   file:
     state: absent
-    path: "/srv/{{ sodar_core_app_name }}-web/{{ sodar_core_app_version }}/{{ item }}/dist/"
+    path: "/srv/{{ sodar_core_app_name }}-web/{{ sodar_core_app_version }}/{{ item }}/vueapp/dist/"
   loop: "{{ sodar_core_vuejs_apps }}"
   # when: clone_repo.changed
   changed_when: false  # hack, must always do
 
 - name: build production version of vue.js apps
   shell: |
-    cd /srv/{{ sodar_core_app_name }}-web/{{ sodar_core_app_version }}/{{ item }}
+    cd /srv/{{ sodar_core_app_name }}-web/{{ sodar_core_app_version }}/{{ item }}/vueapp
     npm run build
   loop: "{{ sodar_core_vuejs_apps }}"
   register: build_vue_app
