@@ -1,5 +1,9 @@
 # Changelog
 
+## v0.3.2
+
+- Fixing problem with `unset SENTRY_DSN`
+
 ## v0.3.1
 
 - Fixing log generation with gunicorn.
