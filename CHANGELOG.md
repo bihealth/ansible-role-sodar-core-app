@@ -1,10 +1,14 @@
 # Changelog
 
-## v0.3.2
+## v0.3.3
 
 - Update vue.js app installation.
 - Fix Django environment for Sphinx manual building.
 - Fix environment issues.
+
+## v0.3.2
+
+- Fix problem with unset SENTRY_DSN.
 
 ## v0.3.1
 
