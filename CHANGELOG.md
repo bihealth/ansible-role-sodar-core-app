@@ -1,5 +1,11 @@
 # Changelog
 
+## v0.3.2
+
+- Update vue.js app installation.
+- Fix Django environment for Sphinx manual building.
+- Fix environment issues.
+
 ## v0.3.1
 
 - Fixing log generation with gunicorn.
