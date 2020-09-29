@@ -1,5 +1,9 @@
 # Changelog
 
+## v0.3.4
+
+- Fix problem with unset SENTRY_DSN (for real).
+
 ## v0.3.3
 
 - Update vue.js app installation.
