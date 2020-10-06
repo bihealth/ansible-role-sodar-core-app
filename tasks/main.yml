@@ -9,5 +9,5 @@
 - include_tasks: setup_user.yml
 - include_tasks: install_sentry_cli.yml
   when: sodar_core_app_sentry_enable_releases
-- include_tasks: setup_systemd.yml
 - include_tasks: install_app.yml
+- include_tasks: setup_systemd.yml
