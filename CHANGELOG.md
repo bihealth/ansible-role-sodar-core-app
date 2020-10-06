@@ -1,5 +1,9 @@
 # Changelog
 
+## v0.3.5
+
+- Fixing include order bugs.
+
 ## v0.3.4
 
 - Fix problem with unset SENTRY_DSN (for real).
